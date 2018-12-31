@@ -28,11 +28,17 @@ class KNNClassifier:
 
     def _predict(self, x):
         '''实际预测算法'''
+        # 欧拉距离
         distances = [sqrt(np.sum((x_train - x) ** 2)) for x_train in self._X_train]
         nearSet = np.argsort(distances)
         topK_y = [self._y_train[i] for i in nearSet[:self.k]]
         votes = Counter(topK_y)
         return votes.most_common(1)[0][0]
+
+    def score(self, X_test, y_test):
+        '''根基测试数据集X_test 和 y_test确定当前模型的准确度'''
+        y_predict = self.predict(X_test)
+        return np.sum(y_predict == y_test) / len(y_test)
 
     def __repr__(self):
         return "KNN(k=%d)" % self.k
